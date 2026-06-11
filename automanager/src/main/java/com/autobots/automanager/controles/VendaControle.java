@@ -27,11 +27,7 @@ public class VendaControle {
 	@GetMapping("/{id}")
 	public ResponseEntity<Venda> obterVenda(@PathVariable long id) {
 		Optional<Venda> venda = repositorio.findById(id);
-		if (venda.isPresent()) {
-			return ResponseEntity.ok(venda.get());
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+		return venda.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@GetMapping
@@ -58,25 +54,33 @@ public class VendaControle {
 		Optional<Venda> vendaExistente = repositorio.findById(id);
 		if (vendaExistente.isPresent()) {
 			Venda venda = vendaExistente.get();
-			if (atualizacao.getValor() > 0) {
-				venda.setValor(atualizacao.getValor());
+
+			if (atualizacao.getCadastro() != null) {
+				venda.setCadastro(atualizacao.getCadastro());
 			}
-			if (atualizacao.getData() != null) {
-				venda.setData(atualizacao.getData());
+			if (atualizacao.getIdentificacao() != null) {
+				venda.setIdentificacao(atualizacao.getIdentificacao());
 			}
-			if (atualizacao.getUsuario() != null) {
-				venda.setUsuario(atualizacao.getUsuario());
+
+			if (atualizacao.getCliente() != null) {
+				venda.setCliente(atualizacao.getCliente());
 			}
+
+			if (atualizacao.getFuncionario() != null) {
+				venda.setFuncionario(atualizacao.getFuncionario());
+			}
+
 			if (atualizacao.getVeiculo() != null) {
 				venda.setVeiculo(atualizacao.getVeiculo());
 			}
-			Venda vendaAtualizada = repositorio.save(venda);
-			return ResponseEntity.ok(vendaAtualizada);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
 
+			Venda vendaAtualizada = repositorio.save(venda);
+
+			return ResponseEntity.ok(vendaAtualizada);
+		}
+
+		return ResponseEntity.notFound().build();
+	}
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluirVenda(@PathVariable long id) {
 		if (repositorio.existsById(id)) {
