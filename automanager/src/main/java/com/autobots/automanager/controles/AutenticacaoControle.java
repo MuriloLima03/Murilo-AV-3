@@ -27,7 +27,7 @@ public class AutenticacaoControle {
 	private EncriptadorSenha encriptador;
 	
 	@PostMapping("/registrar-credencial")
-	public ResponseEntity<?> registrarCredencial(@RequestBody CredencialUsuarioSenha credencialDto) {
+	public ResponseEntity<?>UregistrarCredencial(@RequestBody CredencialUsuarioSenha credencialDto) {
 		try {
 			// Validações
 			if (credencialDto.getNomeUsuario() == null || credencialDto.getNomeUsuario().isEmpty()) {
@@ -70,7 +70,7 @@ public class AutenticacaoControle {
 			if (usuario == null) {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
 			}
-			
+
 			// Verificar credenciais
 			Optional<CredencialUsuarioSenha> credencialOpt = usuario.getCredenciais().stream()
 					.filter(c -> c instanceof CredencialUsuarioSenha)
@@ -95,6 +95,7 @@ public class AutenticacaoControle {
 			usuario.getCredenciais().add(credencial);
 			repositorioUsuario.save(usuario);
 			
+
 			return ResponseEntity.ok(new LoginResponse("Login realizado com sucesso", usuario.getId(), usuario.getNome()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

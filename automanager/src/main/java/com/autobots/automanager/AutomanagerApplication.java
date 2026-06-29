@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import com.autobots.automanager.seguranca.EncriptadorSenha;
 import com.autobots.automanager.entitades.CredencialUsuarioSenha;
 import com.autobots.automanager.entitades.Documento;
 import com.autobots.automanager.entitades.Email;
@@ -28,7 +28,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 
 	@Autowired
 	private RepositorioEmpresa repositorioEmpresa;
-
+	@Autowired
+	private EncriptadorSenha encriptador;
 	public static void main(String[] args) {
 		SpringApplication.run(AutomanagerApplication.class, args);
 	}
@@ -95,8 +96,9 @@ public class AutomanagerApplication implements CommandLineRunner {
 		CredencialUsuarioSenha credencialFuncionario = new CredencialUsuarioSenha();
 		credencialFuncionario.setInativo(false);
 		credencialFuncionario.setNomeUsuario("dompedrofuncionario");
-		credencialFuncionario.setSenha("123456");
-		credencialFuncionario.setCriacao(new Date());
+		credencialFuncionario.setSenha(
+				encriptador.encriptarSenha("123456"));
+				credencialFuncionario.setCriacao(new Date());
 		credencialFuncionario.setUltimoAcesso(new Date());
 
 		funcionario.getCredenciais().add(credencialFuncionario);

@@ -21,16 +21,7 @@ public class TratadorExcecoes extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
 	}
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> tratarValidacao(MethodArgumentNotValidException ex, WebRequest request) {
-		String mensagem = ex.getBindingResult().getFieldError().getDefaultMessage();
-		ApiErro erro = new ApiErro(
-			HttpStatus.BAD_REQUEST.value(),
-			"Erro de validação: " + mensagem,
-			request.getDescription(false).replace("uri=", "")
-		);
-		return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
-	}
+
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> tratarExcecaoGeral(Exception ex, WebRequest request) {

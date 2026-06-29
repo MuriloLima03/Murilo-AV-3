@@ -21,7 +21,7 @@ import com.autobots.automanager.modelo.DocumentoSelecionador;
 import com.autobots.automanager.repositorios.RepositorioDocumento;
 
 @RestController
-//O Sonho da Câmara Vermelha
+//Z
 public class DocumentoControle {
     @Autowired
     private RepositorioDocumento repositorio;
