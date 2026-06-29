@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.autobots.automanager.entitades.CredencialUsuarioSenha;
 import com.autobots.automanager.entitades.Usuario;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
-import com.autobots.automanager.seguranca.EncriptadorSenha;
 
 @RestController
 @RequestMapping("/autenticacao")
@@ -23,8 +22,7 @@ public class AutenticacaoControle {
 	@Autowired
 	private RepositorioUsuario repositorioUsuario;
 	
-	@Autowired
-	private EncriptadorSenha encriptador;
+
 	
 	@PostMapping("/registrar-credencial")
 	public ResponseEntity<?>UregistrarCredencial(@RequestBody CredencialUsuarioSenha credencialDto) {
@@ -38,12 +36,12 @@ public class AutenticacaoControle {
 			}
 			
 			// Criptografar a senha
-			String senhaEncriptada = encriptador.encriptarSenha(credencialDto.getSenha());
+
 			
 			// Criar a credencial
 			CredencialUsuarioSenha credencial = new CredencialUsuarioSenha();
 			credencial.setNomeUsuario(credencialDto.getNomeUsuario());
-			credencial.setSenha(senhaEncriptada);
+
 			credencial.setCriacao(new Date());
 			credencial.setInativo(false);
 			
@@ -85,9 +83,6 @@ public class AutenticacaoControle {
 			CredencialUsuarioSenha credencial = credencialOpt.get();
 			
 			// Validar senha
-			if (!encriptador.validarSenha(loginRequest.getSenha(), credencial.getSenha())) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
-			}
 			
 			// Atualizar último acesso
 			credencial.setUltimoAcesso(new Date());
