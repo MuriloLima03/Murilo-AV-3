@@ -11,12 +11,21 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Disable CSRF (required for H2 console + APIs in dev)
                 .csrf(AbstractHttpConfigurer::disable)
+
+                // Allow H2 console without authentication
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers().permitAll()
                         .anyRequest().authenticated()
                 )
+
+                // Required so H2 console can render inside iframe
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+
+                // Keep HTTP Basic auth for your API
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();
